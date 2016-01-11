@@ -2,10 +2,11 @@
 #
 # Summary: Find and remove duplicate build definitions
 #
-# Usage: nodenv prune-version-defs [-f] [-d <dir>] [-n] [-v]
+# Usage: rbenv prune-version-defs [-f] [-d <dir>] [-n] [-v]
 #
-# Scrapes nodejs.org and iojs.org to create build definitions for node
-# versions not yet available to node-build
+# Removes build definitions that exist elsewhere in the RUBY_BUILD_DEFINITIONS
+# lookup path; intended primarily to remove locally-scraped duplicates once
+# they are included in ruby-build itself.
 #
 #   -d/--destination   Directory from which duplicate build definitions will
 #                      be removed
@@ -38,19 +39,19 @@ abs_dirname() {
 INSTALL_PREFIX="$(abs_dirname "${BASH_SOURCE[0]}")/.."
 
 # prepend our share dir to defs path; the first path will be the write target
-# also insert NODE_BUILD_ROOT, if set
-NODE_BUILD_DEFINITIONS="${INSTALL_PREFIX}/share/node-build${NODE_BUILD_ROOT:+:$NODE_BUILD_ROOT}${NODE_BUILD_DEFINITIONS:+:$NODE_BUILD_DEFINITIONS}"
+# also insert RUBY_BUILD_ROOT, if set
+RUBY_BUILD_DEFINITIONS="${INSTALL_PREFIX}/share/ruby-build${RUBY_BUILD_ROOT:+:$RUBY_BUILD_ROOT}${RUBY_BUILD_DEFINITIONS:+:$RUBY_BUILD_DEFINITIONS}"
 
-# Add `share/node-build/` directory from each nodenv plugin to the list of
+# Add `share/ruby-build/` directory from each rbenv plugin to the list of
 # paths where build definitions are looked up.
 shopt -s nullglob
-for plugin_path in "$NODENV_ROOT"/plugins/*/share/node-build; do
-  NODE_BUILD_DEFINITIONS="${NODE_BUILD_DEFINITIONS%:}:${plugin_path}"
+for plugin_path in "$RBENV_ROOT"/plugins/*/share/ruby-build; do
+  RUBY_BUILD_DEFINITIONS="${RUBY_BUILD_DEFINITIONS%:}:${plugin_path}"
 done
-export NODE_BUILD_DEFINITIONS
+export RUBY_BUILD_DEFINITIONS
 shopt -u nullglob
 
-# Provide nodenv completions
+# Provide rbenv completions
 while [ $# -gt 0 ]; do
   case "$1" in
     --complete )
@@ -63,25 +64,25 @@ while [ $# -gt 0 ]; do
     -d | --destination )
       shift
       # overwrite the defs write target
-      NODE_BUILD_DEFINITIONS="$(abs_dirname "${1%/}/"):${NODE_BUILD_DEFINITIONS}" ;;
+      RUBY_BUILD_DEFINITIONS="$(abs_dirname "${1%/}/"):${RUBY_BUILD_DEFINITIONS}" ;;
     -f | --force )
       FORCE=true ;;
     -h | --help )
-      exec nodenv-help update-version-defs ;;
+      exec rbenv-help update-version-defs ;;
     -n | --dry-run )
       DRY_RUN=true
       VERBOSE=true ;;
     -v | --verbose )
       VERBOSE=true ;;
     * )
-      nodenv-help --usage update-version-defs >&2
+      rbenv-help --usage update-version-defs >&2
       exit 1;;
   esac
   shift
 done
 
-target_dir="$(abs_dirname "${NODE_BUILD_DEFINITIONS%%:*}"/)"
-remaining_dirs="${NODE_BUILD_DEFINITIONS#*:}"
+target_dir="$(abs_dirname "${RUBY_BUILD_DEFINITIONS%%:*}"/)"
+remaining_dirs="${RUBY_BUILD_DEFINITIONS#*:}"
 
 for file in "$target_dir"/*; do
   file="$(basename "$file")"

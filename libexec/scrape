@@ -1,42 +1,40 @@
-#! /usr/bin/env node
+#! /usr/bin/env bash
 
-var scrape = require('../lib/scraper')
+# scraper entrypoint
 
-var nodejs = require('../lib/scraper-nodejs')
-var iojs = require('../lib/scraper-iojs')
+# ideally invokes ruby scraper, jruby scraper, rubinius scraper, et. al.
 
-var nodes = {}
-var options = {
-  dryRun: false,
-  overwrite: false,
-  definitionPaths: (process.env.NODE_BUILD_DEFINITIONS || 'share/node-build').split(':')
-}
 
-process.argv.forEach(function (arg) {
-  switch (arg) {
-    case '-f':
-    case '--force':
-      options.overwrite = true
-      break
-    case '-n':
-    case '--dry-run':
-      options.dryRun = true
-      break
-    case '--nodejs':
-      nodes.nodejs = nodejs
-      break
-    case '--iojs':
-      nodes.iojs = iojs
-      break
-  }
-})
+# options
+# - dryRun
+# - overwrite
+# - definitionPaths: (process.env.NODE_BUILD_DEFINITIONS || 'share/node-build').split(':')
 
-if (!Object.keys(nodes).length) {
-  nodes = { nodejs: nodejs, iojs: iojs }
-}
-
-for (var node in nodes) {
-  if (nodes.hasOwnProperty(node)) {
-    scrape(nodes[node], options)
-  }
-}
+# process.argv.forEach(function (arg) {
+#   switch (arg) {
+#     case '-f':
+#     case '--force':
+#       options.overwrite = true
+#       break
+#     case '-n':
+#     case '--dry-run':
+#       options.dryRun = true
+#       break
+#     case '--nodejs':
+#       nodes.nodejs = nodejs
+#       break
+#     case '--iojs':
+#       nodes.iojs = iojs
+#       break
+#   }
+# })
+#
+# if (!Object.keys(nodes).length) {
+#   nodes = { nodejs: nodejs, iojs: iojs }
+# }
+#
+# for (var node in nodes) {
+#   if (nodes.hasOwnProperty(node)) {
+#     scrape(nodes[node], options)
+#   }
+# }
