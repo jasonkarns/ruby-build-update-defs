@@ -76,8 +76,7 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-# [TODO] unnecessary if scraper is written in bash
-# change to plugin dir so .ruby-version will be respected
+# change to plugin dir so CWD is plugin root
 cd "$INSTALL_PREFIX" || exit 1
 
 exec ./libexec/scrape "${SCRAPE_OPTS[@]}"
