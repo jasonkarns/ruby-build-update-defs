@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
 #
-# Summary: Create build definitions
+# Summary: Create build definitions from rubinius.com
 #
-# Usage: rbenv update-version-defs [-f] [-d <dir>] [-n]
+# Usage: rbenv update-version-defs [-f] [-d <dir>] [-n] [--rbx]
 #
-# Scrapes [FIXME] to create build definitions for ruby
+# Scrapes rubinius.com to create build definitions for ruby
 # versions not yet available to ruby-build
 #
 #   -d/--destination   Directory where build definitions will be written
 #   -f/--force         Write build definitions that already exist somewhere in
 #                      RUBY_BUILD_DEFINITIONS paths; possibly overwriting
-#   -n/--dry-run       List definitions that would be created; without doing so
+#   -n/--dry-run       Print build definitions that would have been written;
+#                      without doing so
 #
+#   --rbx/--rubinius   Scrape rubinius.com for ruby definitions;
+#                      If none of --rbx are supplied, defaults to all
 #
 
 set -e
