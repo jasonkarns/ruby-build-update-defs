@@ -1,40 +1,46 @@
 #! /usr/bin/env bash
 
-# scraper entrypoint
+declare -a RUBIES
 
-# ideally invokes ruby scraper, jruby scraper, rubinius scraper, et. al.
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -f | --force )
+      OVERWRITE=true ;;
+    -n | --dry-run )
+      DRY_RUN=true ;;
+    * )
+      echo "invalid usage" >&2
+      exit 1 ;;
+  esac
+  shift
+done
 
+IFS=: read -ra DEF_PATHS <<<"${RUBY_BUILD_DEFINITIONS:-share/ruby-build}"
 
-# options
-# - dryRun
-# - overwrite
-# - definitionPaths: (process.env.NODE_BUILD_DEFINITIONS || 'share/node-build').split(':')
+file_exists() {
+  local filename="$1"
+  [ -n "$OVERWRITE" ] && return 1
 
-# process.argv.forEach(function (arg) {
-#   switch (arg) {
-#     case '-f':
-#     case '--force':
-#       options.overwrite = true
-#       break
-#     case '-n':
-#     case '--dry-run':
-#       options.dryRun = true
-#       break
-#     case '--nodejs':
-#       nodes.nodejs = nodejs
-#       break
-#     case '--iojs':
-#       nodes.iojs = iojs
-#       break
-#   }
-# })
-#
-# if (!Object.keys(nodes).length) {
-#   nodes = { nodejs: nodejs, iojs: iojs }
-# }
-#
-# for (var node in nodes) {
-#   if (nodes.hasOwnProperty(node)) {
-#     scrape(nodes[node], options)
-#   }
-# }
+  for p in "${DEF_PATHS[@]}"; do
+    [ -f "$p/$filename" ] && return
+  done
+}
+
+write_file() {
+  local filename="${DEF_PATHS[0]}/$1"
+  local definition="$2"
+
+  if [ -n "$DRY_RUN" ]; then
+    echo "Would write $filename"
+    cat <<<"$definition"
+  else
+    cat > "$filename" <<<"$definition"
+    echo "$filename written"
+  fi
+}
+
+for ruby in "${RUBIES[@]}"; do
+  . "lib/scrape_${ruby}.bash"
+
+  scrape_"$ruby"
+done
