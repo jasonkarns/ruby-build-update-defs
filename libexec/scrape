@@ -32,13 +32,12 @@ file_exists() {
 
 write_file() {
   local filename="${DEF_PATHS[0]}/$1"
-  local definition="$2"
 
   if [ -n "$DRY_RUN" ]; then
     echo "Would write $filename"
-    cat <<<"$definition"
+    cat -
   else
-    cat > "$filename" <<<"$definition"
+    cat - > "$filename"
     echo "$filename written"
   fi
 }
