@@ -3,7 +3,7 @@ RBX_BASE_URL=https://rubinius-releases-rubinius-com.s3.amazonaws.com
 scrape_rubinius() {
   local filename num_components pkg rbx sha
 
-  for pkg in $(curl "$RBX_BASE_URL/index.txt" 2>/dev/null | grep -e '.tar.bz2$'); do
+  for pkg in $(curl "$RBX_BASE_URL/index.txt" 2>/dev/null | grep '.tar.bz2$'); do
     rbx="${pkg%.tar.bz2}"
     sha=$(curl "$RBX_BASE_URL/$pkg.sha512" 2>/dev/null)
     filename="${rbx/rubinius/rbx}"
