@@ -8,6 +8,8 @@ while [ $# -gt 0 ]; do
       OVERWRITE=true ;;
     -n | --dry-run )
       DRY_RUN=true ;;
+    --rbx | --rubinius )
+      RUBIES+=('rubinius') ;;
     * )
       echo "invalid usage" >&2
       exit 1 ;;
@@ -16,6 +18,8 @@ while [ $# -gt 0 ]; do
 done
 
 IFS=: read -ra DEF_PATHS <<<"${RUBY_BUILD_DEFINITIONS:-share/ruby-build}"
+
+[ ${#RUBIES[@]} -gt 0 ] || RUBIES=(rubinius)
 
 file_exists() {
   local filename="$1"
@@ -28,13 +32,12 @@ file_exists() {
 
 write_file() {
   local filename="${DEF_PATHS[0]}/$1"
-  local definition="$2"
 
   if [ -n "$DRY_RUN" ]; then
     echo "Would write $filename"
-    cat <<<"$definition"
+    cat -
   else
-    cat > "$filename" <<<"$definition"
+    cat - > "$filename"
     echo "$filename written"
   fi
 }
