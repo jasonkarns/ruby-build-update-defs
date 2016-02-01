@@ -1,13 +1,11 @@
 RBX_BASE_URL=https://rubinius-releases-rubinius-com.s3.amazonaws.com
 
 scrape_rubinius() {
-  local filename num_components pkg rbx
+  local filename pkg rbx
 
   for pkg in $(curl "$RBX_BASE_URL/index.txt" 2>/dev/null | grep '.tar.bz2$'); do
     rbx="${pkg%.tar.bz2}"
     filename="${rbx/rubinius/rbx}"
-    num_components="$(tr . $'\n' <<<"${filename}" | wc -l)"
-    [ "$num_components" -ge 3 ] || filename="${filename}.0"
 
     if ! file_exists "$filename"; then
       write_file "$filename" <<DEF
