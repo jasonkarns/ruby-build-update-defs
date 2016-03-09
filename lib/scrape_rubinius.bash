@@ -10,7 +10,7 @@ scrape_rubinius() {
     if ! file_exists "$filename"; then
       write_file "$filename" <<DEF
 require_llvm 3.5
-install_package "openssl-1.0.2f" "https://www.openssl.org/source/openssl-1.0.2f.tar.gz#932b4ee4def2b434f85435d9e3e19ca8ba99ce9a065a61524b429a9d5e9b2e9c" mac_openssl --if has_broken_mac_openssl
+install_package "openssl-1.0.2g" "https://www.openssl.org/source/openssl-1.0.2g.tar.gz#b784b1b3907ce39abf4098702dade6365522a253ad1552e267a9a0e89594aa33" mac_openssl --if has_broken_mac_openssl
 install_package "${rbx}" "https://rubinius-releases-rubinius-com.s3.amazonaws.com/${pkg}" rbx
 DEF
     fi
