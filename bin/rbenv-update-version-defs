@@ -62,6 +62,7 @@ while [ $# -gt 0 ]; do
       echo --dry-run
       echo --force
       echo --help
+      echo --rubinius
       exit ;;
     -d | --destination )
       shift
@@ -70,7 +71,8 @@ while [ $# -gt 0 ]; do
     -h | --help )
       exec rbenv-help update-version-defs ;;
     -f | --force | \
-    -n | --dry-run )
+    -n | --dry-run | \
+    --rubinius )
       SCRAPE_OPTS[${#SCRAPE_OPTS[*]}]="$1" ;;
     * )
       rbenv-help --usage update-version-defs >&2
