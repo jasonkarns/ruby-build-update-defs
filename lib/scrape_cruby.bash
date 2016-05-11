@@ -7,7 +7,7 @@ scrape_cruby() {
   while IFS='' read -r line || [[ -n "$line" ]]; do
     read -ra release <<<"$line"
 
-    version="${release[0]%.tar.bz2}"
+    version="${release[0]}"
     filename="${version#ruby-}"
     url="${release[1]}"
     sha="${release[3]}"
