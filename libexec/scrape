@@ -58,8 +58,8 @@ write_file() {
   fi
 }
 
-for ruby in "${RUBIES[@]}"; do
-  . "lib/scrape_${ruby}.bash"
+for RUBY_ENGINE in "${RUBIES[@]}"; do
+  . "lib/scrape_${RUBY_ENGINE}.bash"
 
-  scrape_"$ruby"
+  scrape_"$RUBY_ENGINE"
 done
