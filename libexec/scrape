@@ -40,7 +40,7 @@ IFS=: read -ra DEF_PATHS <<<"${RUBY_BUILD_DEFINITIONS:-share/ruby-build}"
 is_recent_release() {
   local version="$1"
 
-  test "${VERSION_FILTERS[$RUBY_ENGINE]}" \< "$version"
+  test -n "$(lib/sh-semver/semver.sh -r "${VERSION_FILTERS[$RUBY_ENGINE]}" "$version")"
 }
 
 file_exists() {
