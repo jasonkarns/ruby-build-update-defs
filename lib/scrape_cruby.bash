@@ -12,7 +12,7 @@ scrape_cruby() {
     url="${release[1]}"
     sha="${release[3]}"
 
-    if ! file_exists "$filename"; then
+    if ! file_exists "$filename" && is_recent_release "$filename"; then
       write_file "$filename" <<DEF
 install_package "openssl-1.0.2h" "https://www.openssl.org/source/openssl-1.0.2h.tar.gz#1d4007e53aad94a5b2002fe045ee7bb0b3d98f1a47f8b2bc851dcd1c74332919" mac_openssl --if has_broken_mac_openssl
 install_package "$version" "$url#$sha" ldflags_dirs standard verify_openssl
