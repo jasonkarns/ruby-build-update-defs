@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 #
-# Summary: Create build definitions from rubinius.com
+# Summary: Create build definitions from ruby-lang.org and rubinius.com
 #
-# Usage: rbenv update-version-defs [-f] [-d <dir>] [-n] [--rbx]
+# Usage: rbenv update-version-defs [-f] [-d <dir>] [-n] [--cruby] [--rbx]
 #
-# Scrapes rubinius.com to create build definitions for ruby
+# Scrapes ruby-lang.org and rubinius.com to create build definitions for ruby
 # versions not yet available to ruby-build
 #
 #   -d/--destination   Directory where build definitions will be written
@@ -13,6 +13,8 @@
 #   -n/--dry-run       Print build definitions that would have been written;
 #                      without doing so
 #
+#   --cruby            Scrape ruby-lang.org for ruby definitions;
+#                      If none of --rbx are supplied, defaults to all
 #   --rbx/--rubinius   Scrape rubinius.com for ruby definitions;
 #                      If none of --rbx are supplied, defaults to all
 #
@@ -62,6 +64,7 @@ while [ $# -gt 0 ]; do
       echo --dry-run
       echo --force
       echo --help
+      echo --cruby
       echo --rubinius
       exit ;;
     -d | --destination )
@@ -72,7 +75,7 @@ while [ $# -gt 0 ]; do
       exec rbenv-help update-version-defs ;;
     -f | --force | \
     -n | --dry-run | \
-    --rubinius )
+    --cruby | --rubinius )
       SCRAPE_OPTS[${#SCRAPE_OPTS[*]}]="$1" ;;
     * )
       rbenv-help --usage update-version-defs >&2

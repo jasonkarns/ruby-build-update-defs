@@ -8,6 +8,8 @@ while [ $# -gt 0 ]; do
       OVERWRITE=true ;;
     -n | --dry-run )
       DRY_RUN=true ;;
+    --cruby )
+      RUBIES+=('cruby') ;;
     --rbx | --rubinius )
       RUBIES+=('rubinius') ;;
     * )
@@ -19,7 +21,7 @@ done
 
 IFS=: read -ra DEF_PATHS <<<"${RUBY_BUILD_DEFINITIONS:-share/ruby-build}"
 
-[ ${#RUBIES[@]} -gt 0 ] || RUBIES=(rubinius)
+[ ${#RUBIES[@]} -gt 0 ] || RUBIES=(cruby rubinius)
 
 file_exists() {
   local filename="$1"
