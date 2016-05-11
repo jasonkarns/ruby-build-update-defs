@@ -64,6 +64,16 @@ write_file() {
   fi
 }
 
+generate_definition() {
+  # definition contents on stdin
+  local version="$1"
+  local filename="$2"
+
+  if ! file_exists "$filename" && is_recent_release "$version"; then
+    write_file "$filename"
+  fi
+}
+
 for RUBY_ENGINE in "${RUBIES[@]}"; do
   . "lib/scrape_${RUBY_ENGINE}.bash"
 
