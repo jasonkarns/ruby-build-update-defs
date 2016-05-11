@@ -5,8 +5,15 @@ declare -A VERSION_FILTERS
 
 push_engine() {
   local engine="$1"
+  [ "$2" = "${2#-}" ] && local version_filter="$2"
 
   RUBIES+=("$engine")
+  if [ -n "$version_filter" ]; then
+    VERSION_FILTERS["$engine"]="$version_filter"
+
+    # signal that a version filter was provided and needs shifted
+    return 1
+  fi
 }
 
 while [ $# -gt 0 ]; do
@@ -16,9 +23,9 @@ while [ $# -gt 0 ]; do
     -n | --dry-run )
       DRY_RUN=true ;;
     --cruby )
-      push_engine cruby ;;
+      push_engine cruby "$2" || shift ;;
     --rbx | --rubinius )
-      push_engine rubinius ;;
+      push_engine rubinius "$2" || shift ;;
     * )
       echo "invalid usage" >&2
       exit 1 ;;
