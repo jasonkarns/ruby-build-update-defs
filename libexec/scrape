@@ -37,6 +37,12 @@ IFS=: read -ra DEF_PATHS <<<"${RUBY_BUILD_DEFINITIONS:-share/ruby-build}"
 
 [ ${#RUBIES[@]} -gt 0 ] || RUBIES=(cruby rubinius)
 
+is_recent_release() {
+  local version="$1"
+
+  test "${VERSION_FILTERS[$RUBY_ENGINE]}" \< "$version"
+}
+
 file_exists() {
   local filename="$1"
   [ -n "$OVERWRITE" ] && return 1
