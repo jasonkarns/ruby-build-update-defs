@@ -37,12 +37,6 @@ IFS=: read -ra DEF_PATHS <<<"${RUBY_BUILD_DEFINITIONS:-share/ruby-build}"
 
 [ ${#RUBIES[@]} -gt 0 ] || RUBIES=(cruby rubinius)
 
-is_recent_release() {
-  local version="$1"
-
-  test -n "$(lib/sh-semver/semver.sh -r "${VERSION_FILTERS[$RUBY_ENGINE]}" "$version")"
-}
-
 file_exists() {
   local filename="$1"
   [ -n "$OVERWRITE" ] && return 1
@@ -50,6 +44,12 @@ file_exists() {
   for p in "${DEF_PATHS[@]}"; do
     [ -f "$p/$filename" ] && return
   done
+}
+
+is_recent_release() {
+  local version="$1"
+
+  test -n "$(lib/sh-semver/semver.sh -r "${VERSION_FILTERS[$RUBY_ENGINE]}" "$version")"
 }
 
 write_file() {
