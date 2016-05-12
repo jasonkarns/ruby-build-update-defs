@@ -1,6 +1,6 @@
 # ruby-build-update-defs
 
-A [rbenv][] plugin that provides a `rbenv update-version-defs` command to
+An [rbenv][] plugin that provides a `rbenv update-version-defs` command to
 create [ruby-build][]-compatible definitions.
 
 ## Installation
