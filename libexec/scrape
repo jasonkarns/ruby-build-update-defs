@@ -49,7 +49,7 @@ file_exists() {
 is_recent_release() {
   local version="$1"
 
-  test -n "$(lib/sh-semver/semver.sh -r "${VERSION_FILTERS[$RUBY_ENGINE]}" "$version")"
+  test -n "$(lib/sh-semver/semver.sh -a -r "${VERSION_FILTERS[$RUBY_ENGINE]}" "$version")"
 }
 
 write_file() {
