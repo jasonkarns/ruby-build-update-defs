@@ -1,6 +1,20 @@
 #! /usr/bin/env bash
 
 declare -a RUBIES
+declare -A VERSION_FILTERS
+
+push_engine() {
+  local engine="$1"
+  [ "$2" = "${2#-}" ] && local version_filter="$2"
+
+  RUBIES+=("$engine")
+  if [ -n "$version_filter" ]; then
+    VERSION_FILTERS["$engine"]="$version_filter"
+
+    # signal that a version filter was provided and needs shifted
+    return 1
+  fi
+}
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -9,9 +23,9 @@ while [ $# -gt 0 ]; do
     -n | --dry-run )
       DRY_RUN=true ;;
     --cruby )
-      RUBIES+=('cruby') ;;
+      push_engine cruby "$2" || shift ;;
     --rbx | --rubinius )
-      RUBIES+=('rubinius') ;;
+      push_engine rubinius "$2" || shift ;;
     * )
       echo "invalid usage" >&2
       exit 1 ;;
@@ -32,6 +46,12 @@ file_exists() {
   done
 }
 
+is_recent_release() {
+  local version="$1"
+
+  test -n "$(lib/sh-semver/semver.sh -a -r "${VERSION_FILTERS[$RUBY_ENGINE]}" "$version")"
+}
+
 write_file() {
   local filename="${DEF_PATHS[0]}/$1"
 
@@ -44,8 +64,18 @@ write_file() {
   fi
 }
 
-for ruby in "${RUBIES[@]}"; do
-  . "lib/scrape_${ruby}.bash"
+generate_definition() {
+  # definition contents on stdin
+  local version="$1"
+  local filename="$2"
 
-  scrape_"$ruby"
+  if ! file_exists "$filename" && is_recent_release "$version"; then
+    write_file "$filename"
+  fi
+}
+
+for RUBY_ENGINE in "${RUBIES[@]}"; do
+  . "lib/scrape_${RUBY_ENGINE}.bash"
+
+  scrape_"$RUBY_ENGINE"
 done

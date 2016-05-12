@@ -74,9 +74,17 @@ while [ $# -gt 0 ]; do
     -h | --help )
       exec rbenv-help update-version-defs ;;
     -f | --force | \
-    -n | --dry-run | \
-    --cruby | --rubinius )
+    -n | --dry-run )
       SCRAPE_OPTS[${#SCRAPE_OPTS[*]}]="$1" ;;
+    --cruby | --rubinius )
+      SCRAPE_OPTS[${#SCRAPE_OPTS[*]}]="$1"
+
+      # check for optional version filter
+      if [ -n "$2" ] && [ "$2" = "${2#-}" ]; then
+        SCRAPE_OPTS[${#SCRAPE_OPTS[*]}]="$2"
+        shift
+      fi
+      ;;
     * )
       rbenv-help --usage update-version-defs >&2
       exit 1;;
