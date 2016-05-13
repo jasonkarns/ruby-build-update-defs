@@ -1,3 +1,0 @@
-[submodule "sh-semver"]
-	path = lib/sh-semver
-	url = https://github.com/qzb/sh-semver
