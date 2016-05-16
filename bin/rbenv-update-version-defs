@@ -2,7 +2,7 @@
 #
 # Summary: Create build definitions from ruby-lang.org and rubinius.com
 #
-# Usage: rbenv update-version-defs [-f] [-d <dir>] [-n] [--cruby] [--rbx]
+# Usage: rbenv update-version-defs [-f] [-d <dir>] [-n] [--cruby [<semver_spec>]] [--rbx [<semver_spec>]]
 #
 # Scrapes ruby-lang.org and rubinius.com to create build definitions for ruby
 # versions not yet available to ruby-build
@@ -17,6 +17,10 @@
 #                      If none of --rbx are supplied, defaults to all
 #   --rbx/--rubinius   Scrape rubinius.com for ruby definitions;
 #                      If none of --rbx are supplied, defaults to all
+#
+#   [<semver_spec>]    Is a semver comparison expression that can be used to
+#                      filter the versions of ruby that will be scraped.
+#                      see: https://github.com/qzb/sh-semver
 #
 
 set -e
