@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#!/usr/bin/env bash
 
 declare -a RUBIES
 declare -A VERSION_FILTERS
@@ -73,6 +73,17 @@ generate_definition() {
     write_file "$filename"
   fi
 }
+
+scrape_openssl() {
+  local base_url="ftp://ftp.openssl.org/source/" package sha tarball
+  tarball="$(curl -qsSLf "$base_url" | grep -e '1\.0\.2.*\.tar\.gz$' | head -1 | cut -d' ' -f19)"
+  package="${tarball%.tar.gz}"
+  sha="$(curl -qsSLf "${base_url}${tarball}.sha256")"
+
+  echo "install_package \"${package}\" \"https://www.openssl.org/source/${tarball}#${sha}\" mac_openssl --if has_broken_mac_openssl"
+}
+
+OPENSSL="$(scrape_openssl)"
 
 for RUBY_ENGINE in "${RUBIES[@]}"; do
   . "lib/scrape_${RUBY_ENGINE}.bash"
