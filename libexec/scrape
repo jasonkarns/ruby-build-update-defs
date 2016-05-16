@@ -76,7 +76,7 @@ generate_definition() {
 
 scrape_openssl() {
   local base_url="ftp://ftp.openssl.org/source/" package sha tarball
-  tarball="$(curl -qsSLf "$base_url" | grep -e '1\.0\.2.*\.tar\.gz$' | head -1 | cut -d' ' -f19)"
+  tarball="$(curl -qsSLf "$base_url" | grep -e '1\.0\.2.*\.tar\.gz$' | tail -n1 | cut -d' ' -f19)"
   package="${tarball%.tar.gz}"
   sha="$(curl -qsSLf "${base_url}${tarball}.sha256")"
 
